@@ -28,10 +28,10 @@ app.use(function(req,res){
                     console.log(docs);
                     if(err){throw err}
                     if(docs.length > 0){ // this url has been shorten, load it from database
-                        res.send({
+                        res.end(JSON.stringify({
                             "original_url": docs[0].original_url,
                             "short_url": "https://imgshortener-fcc.herokuapp.com/"+docs[0]._id
-                        });
+                        }));
                         db.close();
                     } else { // this url hasn't been shorten yet, insert it from database
                         newData.insert({
@@ -39,10 +39,10 @@ app.use(function(req,res){
                         }, function(err, record){
                             if(err){throw err}
                             console.log("new url has been shorten");
-                            res.send({
+                            res.end(JSON.stringify({
                                 "original_url": urlToVerify,
                                 "short_url":"https://imgshortener-fcc.herokuapp.com/"+record.ops[0]._id
-                            });
+                            }));
                             db.close();
                         });
                     }
