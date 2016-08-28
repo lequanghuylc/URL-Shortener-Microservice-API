@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var mongo = require("mongodb").MongoClient;
 var ObjectId = require('mongodb').ObjectId;
-var url = 'mongodb://localhost:27017/urlshorten';
+var url = process.env.MONGODB_URI;
 
 app.use('/', express.static(__dirname + '/public'));
 app.use(function(req,res){
@@ -30,7 +30,7 @@ app.use(function(req,res){
                     if(docs.length > 0){ // this url has been shorten, load it from database
                         res.end(JSON.stringify({
                             "original_url": docs[0].original_url,
-                            "short_url": "https://urlshorten-quanghuyf.c9users.io/"+docs[0]._id
+                            "short_url": "https://imgshortener-fcc.herokuapp.com/"+docs[0]._id
                         }));
                         db.close();
                     } else { // this url hasn't been shorten yet, insert it from database
@@ -41,7 +41,7 @@ app.use(function(req,res){
                             console.log("new url has been shorten");
                             res.end(JSON.stringify({
                                 "original_url": urlToVerify,
-                                "short_url":"https://urlshorten-quanghuyf.c9users.io/"+record.ops[0]._id
+                                "short_url":"https://imgshortener-fcc.herokuapp.com/"+record.ops[0]._id
                             }));
                             db.close();
                         });
@@ -73,5 +73,5 @@ app.use(function(req,res){
         
     }
 });
-
-app.listen(8080);
+var port = process.env.PORT || 8080;
+app.listen(port);
