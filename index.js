@@ -1,7 +1,7 @@
 var express = require("express");
 var app = express();
 var mongo = require("mongodb").MongoClient;
-var ObjectId = require('mongodb').ObjectId;
+var ObjectId = require('mongodb').ObjectID;
 var url = process.env.MONGODB_URI;
 
 app.use('/', express.static(__dirname + '/public'));
@@ -53,6 +53,7 @@ app.use(function(req,res){
     } else {
         // check if _id in data
         var idToFind = req.url.substring(1);
+        if(idToFind.length === 24){
         mongo.connect(url, function(err, db){
            if(err){throw err}
            console.log("Connected correctly to server, to find url");
@@ -70,6 +71,9 @@ app.use(function(req,res){
               }
            });
         });
+        } else {
+          res.redirect("/");
+        }
         
     }
 });
